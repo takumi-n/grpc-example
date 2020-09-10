@@ -67,5 +67,5 @@ func main() {
 
 	fmt.Printf("http = %d [ms]\n", httpEnd.Sub(httpStart).Milliseconds())
 	fmt.Printf("grpc = %d [ms]\n", grpcEnd.Sub(grpcStart).Milliseconds())
-	fmt.Printf("grpc single connection = %d [ms]\n", singleConnectionTime)
+	fmt.Printf("grpc with single connection = %d [ms]\n", singleConnectionTime)
 }

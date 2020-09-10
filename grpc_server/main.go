@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
 
 	pb "github.com/takumi-n/grpc-example/calculator"
@@ -30,14 +29,9 @@ func (s *server) Div(c context.Context, in *pb.OpRequest) (*pb.Result, error) {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("Failed to listen: %v\n", err)
-	}
+	lis, _ := net.Listen("tcp", port)
 
 	s := grpc.NewServer()
 	pb.RegisterCalculatorServer(s, &server{})
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve: %v\n", err)
-	}
+	s.Serve(lis)
 }

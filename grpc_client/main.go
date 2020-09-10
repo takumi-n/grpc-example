@@ -18,10 +18,7 @@ func main() {
 		log.Fatalln("Need 3 args: <operator> <operandX> <operandY>")
 	}
 
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("Faild to connect: %v\n", err)
-	}
+	conn, _ := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	defer conn.Close()
 
 	c := pb.NewCalculatorClient(conn)
@@ -33,24 +30,25 @@ func main() {
 	defer cancel()
 
 	var (
-		req = &pb.OpRequest{X: operandX, Y: operandY}
-		r   *pb.Result
+		req    = &pb.OpRequest{X: operandX, Y: operandY}
+		result *pb.Result
+		err    error
 	)
 
 	switch operator {
 	case "add":
-		r, err = c.Add(ctx, req)
+		result, err = c.Add(ctx, req)
 	case "sub":
-		r, err = c.Sub(ctx, req)
+		result, err = c.Sub(ctx, req)
 	case "mul":
-		r, err = c.Mul(ctx, req)
+		result, err = c.Mul(ctx, req)
 	case "div":
-		r, err = c.Div(ctx, req)
+		result, err = c.Div(ctx, req)
 	}
 
 	if err != nil {
 		log.Fatalf("Faild to run rpc: %v\n", err)
 	}
 
-	log.Println(r)
+	log.Println(result)
 }
