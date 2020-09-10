@@ -31,6 +31,25 @@ func requestGrpc() {
 	c.Add(ctx, req)
 }
 
+func requestGrpcWithSingleConnection() int64 {
+	conn, _ := grpc.Dial("localhost:50000", grpc.WithInsecure(), grpc.WithBlock())
+	defer conn.Close()
+
+	grpcStart := time.Now()
+	for i := 0; i < num; i++ {
+		c := pb.NewCalculatorClient(conn)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
+		req := &pb.OpRequest{X: 100, Y: 200}
+
+		c.Add(ctx, req)
+	}
+	grpcEnd := time.Now()
+
+	return grpcEnd.Sub(grpcStart).Milliseconds()
+}
+
 func main() {
 	httpStart := time.Now()
 	for i := 0; i < num; i++ {
@@ -44,6 +63,9 @@ func main() {
 	}
 	grpcEnd := time.Now()
 
+	singleConnectionTime := requestGrpcWithSingleConnection()
+
 	fmt.Printf("http = %d [ms]\n", httpEnd.Sub(httpStart).Milliseconds())
 	fmt.Printf("grpc = %d [ms]\n", grpcEnd.Sub(grpcStart).Milliseconds())
+	fmt.Printf("grpc single connection = %d [ms]\n", singleConnectionTime)
 }
