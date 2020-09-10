@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const num = 10000
+const num = 5000
 
 func requestHttp() {
 	url := "http://localhost:8888?op=add&x=100&y=200"
