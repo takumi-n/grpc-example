@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "calculator";
+
+service Calculator {
+  rpc Add (OpRequest) returns (Result) {}
+  rpc Sub (OpRequest) returns (Result) {}
+  rpc Mul (OpRequest) returns (Result) {}
+  rpc Div (OpRequest) returns (Result) {}
+}
+
+message OpRequest {
+  double x = 1;
+  double y = 2;
+}
+
+message Result {
+  double result = 1;
+}
